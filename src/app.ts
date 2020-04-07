@@ -1,7 +1,44 @@
-function sumAll(...arr: Array<number>) {
-  console.log(arguments);
-  return arr.reduce((prev, next) => prev + next);
+interface SizesInterface {
+  availableSizes: string[];
 }
 
-const sum = sumAll(1, 2, 3, 4, 5, 6, 7, 8, 9);
-console.log(sum);
+abstract class Sizes implements SizesInterface {
+  constructor(protected sizes: string[]) {}
+  set availableSizes(sizes: string[]) {
+    this.sizes = sizes;
+  }
+  get availableSizes() {
+    return this.sizes;
+  }
+}
+interface PizzaInterface extends SizesInterface {
+  readonly name: string;
+  toppings: string[];
+  updateSizes(sizes: string[]): void;
+  addTopping(topping: string): void;
+}
+class Pizza extends Sizes implements PizzaInterface {
+  public toppings: string[] = [];
+
+  constructor(readonly name: string, sizes: string[]) {
+    super(sizes);
+  }
+
+  public updateSizes(sizes: string[]) {
+    this.sizes = sizes;
+  }
+
+  public addTopping(topping: string) {
+    this.toppings.push(topping);
+  }
+}
+
+const pizza = new Pizza('pepperoni', ['small', 'medium']);
+pizza.addTopping('cheese');
+pizza.addTopping('pepperoni');
+console.log(pizza.availableSizes);
+pizza.updateSizes(['x-l']);
+console.log(pizza.name);
+console.log(pizza.availableSizes);
+console.log();
+console.log(pizza);
